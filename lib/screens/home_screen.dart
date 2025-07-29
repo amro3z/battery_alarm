@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Your Battery Status is: $batterState'),
+            
           ],
         ),
       ),
