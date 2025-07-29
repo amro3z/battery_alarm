@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var battery = Battery();
   late BatteryState batterState = BatteryState.discharging;
+ 
 
   @override
   void initState() {

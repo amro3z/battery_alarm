@@ -1,7 +1,10 @@
+import 'package:battery_alarm/notification/local_service.dart';
 import 'package:battery_alarm/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalService().initNotification();
   runApp(Initial());
 }
 
