@@ -1,11 +1,17 @@
 import 'package:battery_alarm/notification/local_service.dart';
 import 'package:battery_alarm/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await LocalService().initNotification();
-  runApp(Initial());
+
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
+
+  await LocalService.initNotification();
+  runApp(const Initial());
 }
 
 class Initial extends StatelessWidget {
