@@ -63,6 +63,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
+             ListTile(
+              title: Text("Scheduled Notification"),
+              leading: Icon(Icons.notifications),
+              onTap: () {
+                // Trigger the scheduled notification
+                // Assuming LocalService is properly initialized
+                LocalService.showScheduledNotification();
+              },
+              trailing: IconButton(
+                icon: Icon(Icons.cancel_outlined),
+                color: Colors.red,
+                onPressed: () {
+                  LocalService.cancelNotifications(id: 2);
+                },
+              ),
+            ),
           ],
         ),
       ),
