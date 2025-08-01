@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
@@ -8,11 +9,14 @@ import 'package:timezone/timezone.dart' as tz;
 class LocalService {
   static FlutterLocalNotificationsPlugin flutterLocalNotification =
       FlutterLocalNotificationsPlugin();
+  static StreamController<NotificationResponse>
+      notificationStreamController = StreamController<NotificationResponse>();
   static onTap(NotificationResponse response) {
+    notificationStreamController.add(response);
     debugPrint("Notification clicked with payload: ${response.payload}");
   }
 
-  static initNotification() async {
+  static Future<void> initNotification() async {
     InitializationSettings settings = InitializationSettings(
       android: AndroidInitializationSettings("@mipmap/ic_launcher"),
       iOS: DarwinInitializationSettings(),
@@ -24,28 +28,37 @@ class LocalService {
     );
   }
 
-  static void showBasicNotification() async {
+  static  showBasicNotification() async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your_channel_id',
       'your_channel_name',
       channelDescription: 'your_channel_description',
       importance: Importance.max,
       priority: Priority.high,
+      sound: RawResourceAndroidNotificationSound('sound'),
     );
     var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
     );
+    try{
     await flutterLocalNotification.show(
       0,
       "🔋 Battery Alert",
       "Your battery state is being monitored (Basic)",
       platformChannelSpecifics,
+      payload: "Basic Notification Payload",
     );
+    return Future.value(true);
+    }
+    catch (e) {
+      log("Error showing basic notification: $e");
+      return Future.value(false);
+    }
   }
 
-  static void showRepeatedNotification() async {
+  static Future<bool> showRepeatedNotification() async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your_channel_id_repeated',
       'your_channel_name_repeated',
@@ -58,6 +71,7 @@ class LocalService {
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
     );
+    try{
     await flutterLocalNotification.periodicallyShow(
       1,
       "🔋 Battery Alert",
@@ -65,8 +79,14 @@ class LocalService {
       RepeatInterval.everyMinute,
       platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.alarmClock,
+      payload: "Repeated Notification Payload",
     );
      log("Repeated notification");
+    return Future.value(true);
+    } catch (e) {
+      log("Error showing repeated notification: $e");
+      return Future.value(false);
+    }
   }
 
   static void showScheduledNotification() async {
@@ -92,6 +112,7 @@ class LocalService {
       tz.TZDateTime(tz.local, 2025, 7, 30, 23, 19,),
       platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.alarmClock,
+      payload: "Scheduled Notification Payload",
     );
   }
 

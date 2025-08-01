@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:battery_alarm/notification/local_service.dart';
 import 'package:flutter/material.dart';
 import 'package:battery_plus/battery_plus.dart';
@@ -16,13 +17,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    listenToStream();
     battery.batteryState.then((value) {
       setState(() {
         batterState = value;
       });
     });
   }
-
+   listenToStream() {
+    LocalService.notificationStreamController.stream.listen((response) {
+      log(response.payload.toString());
+      Navigator.pushNamed(context, "tapNotification", arguments: {
+        'response': response,
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
